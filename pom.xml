@@ -20,6 +20,11 @@
         <module>webmail-product</module>
         <!--仓储服务-->
         <module>webmail-ware</module>
+        <!--人人项目管理-->
+        <module>renren-fast</module>
+        <!--代码生成器-->
+        <module>renren-generator</module>
+        <module>webmail-common</module>
     </modules>
 
 </project>

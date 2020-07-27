@@ -3,6 +3,7 @@ package com.zy.webmail.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zy.common.utils.PageUtils;
 import com.zy.webmail.product.entity.SpuInfoEntity;
+import com.zy.webmail.product.vo.SpuSaveVo;
 
 import java.util.Map;
 
@@ -16,5 +17,13 @@ import java.util.Map;
 public interface SpuInfoService extends IService<SpuInfoEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void spuSaveInfo(SpuSaveVo saveVo);
+
+    void saveBaseSpuInfo(SpuInfoEntity spuInfoEntity);
+
+    PageUtils queryPageByCondition(Map<String, Object> params);
+
+    void up(Long spuId);
 }
 

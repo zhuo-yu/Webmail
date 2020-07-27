@@ -25,6 +25,7 @@
         <!--代码生成器-->
         <module>renren-generator</module>
         <module>webmail-common</module>
+        <module>webmail-third-service</module>
     </modules>
 
 </project>

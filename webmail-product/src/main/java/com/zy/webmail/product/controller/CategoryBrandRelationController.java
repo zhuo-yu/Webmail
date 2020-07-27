@@ -1,14 +1,14 @@
 package com.zy.webmail.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.zy.webmail.product.vo.BrandVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.zy.webmail.product.entity.CategoryBrandRelationEntity;
 import com.zy.webmail.product.service.CategoryBrandRelationService;
@@ -25,10 +25,37 @@ import com.zy.common.utils.R;
  * @date 2020-04-18 12:58:00
  */
 @RestController
-@RequestMapping("product/categorybrandrelation")
+@RequestMapping("/product/categorybrandrelation")
 public class CategoryBrandRelationController {
     @Autowired
     private CategoryBrandRelationService categoryBrandRelationService;
+
+    /**
+     * 获取当前品牌所有分类列表列表
+     */
+    @GetMapping("/catelog/list")
+    public R cateloglist(@RequestParam("brandId") Long brandId){
+        List<CategoryBrandRelationEntity> list= categoryBrandRelationService.getcateloglist(brandId);
+//        List<CategoryBrandRelationEntity> catalog_id = categoryBrandRelationService.list(new QueryWrapper<CategoryBrandRelationEntity>().eq("catalog_id", BrandId));
+        return R.ok().put("data", list);
+    }
+
+    /*
+    * /product/categorybrandrelation/brands/list
+    * 获取分类关联的品牌
+    * */
+    @GetMapping("/brands/list")
+    public R getbrands(@RequestParam(value = "catId") Long catId){
+        List<CategoryBrandRelationEntity> brandslist=categoryBrandRelationService.getbrands(catId);
+
+        List<BrandVo> collect = brandslist.stream().map((item) -> {
+            BrandVo brandVo = new BrandVo();
+            brandVo.setBrandName(item.getBrandName());
+            brandVo.setBrandId(item.getBrandId());
+            return brandVo;
+        }).collect(Collectors.toList());
+        return R.ok().put("data",collect);
+    }
 
     /**
      * 列表
@@ -37,7 +64,6 @@ public class CategoryBrandRelationController {
     //@RequiresPermissions("product:categorybrandrelation:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = categoryBrandRelationService.queryPage(params);
-
         return R.ok().put("page", page);
     }
 
@@ -59,8 +85,7 @@ public class CategoryBrandRelationController {
     @RequestMapping("/save")
     //@RequiresPermissions("product:categorybrandrelation:save")
     public R save(@RequestBody CategoryBrandRelationEntity categoryBrandRelation){
-		categoryBrandRelationService.save(categoryBrandRelation);
-
+		categoryBrandRelationService.saveDetail(categoryBrandRelation);
         return R.ok();
     }
 

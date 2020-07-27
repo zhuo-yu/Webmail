@@ -3,6 +3,7 @@ package com.zy.webmail.product.dao;
 import com.zy.webmail.product.entity.BrandEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Update;
 
 /**
  * 品牌
@@ -13,5 +14,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface BrandDao extends BaseMapper<BrandEntity> {
-	
+
 }

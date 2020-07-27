@@ -12,5 +12,4 @@
         <result property="catelogName" column="catelog_name"/>
     </resultMap>
 
-
 </mapper>

@@ -1,5 +1,6 @@
 package com.zy.webmail.ware.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
@@ -60,6 +61,7 @@ public class PurchaseEntity implements Serializable {
 	/**
 	 * 更新日期
 	 */
+	@TableField
 	private Date updateTime;
 
 }

@@ -1,14 +1,12 @@
 package com.zy.webmail.ware.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import com.zy.webmail.ware.vo.SkuHasStockVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.zy.webmail.ware.entity.WareSkuEntity;
 import com.zy.webmail.ware.service.WareSkuService;
@@ -30,13 +28,20 @@ public class WareSkuController {
     @Autowired
     private WareSkuService wareSkuService;
 
+    //查询sku是否有库存,返回skuid、stock
+    @PostMapping("/hasstock")
+    public List<SkuHasStockVo> getSkusHasStock(@RequestBody List<Long> skuIds){
+       List<SkuHasStockVo> vos=  wareSkuService.getSkusHasStock(skuIds);
+       return vos;
+    }
+
     /**
      * 列表
      */
     @RequestMapping("/list")
     //@RequiresPermissions("ware:waresku:list")
     public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = wareSkuService.queryPage(params);
+        PageUtils page = wareSkuService.queryPageByCondition(params);
 
         return R.ok().put("page", page);
     }

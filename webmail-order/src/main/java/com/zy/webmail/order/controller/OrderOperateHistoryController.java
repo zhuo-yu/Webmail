@@ -37,7 +37,6 @@ public class OrderOperateHistoryController {
     //@RequiresPermissions("order:orderoperatehistory:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = orderOperateHistoryService.queryPage(params);
-
         return R.ok().put("page", page);
     }
 

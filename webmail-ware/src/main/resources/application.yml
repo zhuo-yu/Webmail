@@ -3,17 +3,21 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: 123456
-    url: jdbc:mysql://192.168.1.106:3306/webmail-wms
+    url: jdbc:mysql://192.168.1.104:3306/webmail-wms
   cloud:
     nacos:
       server-addr: 127.0.0.1:8848
   application:
     name: ware-provider
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
 mybatis-plus:
-  mapper-locations: classpath:mapper.**/*.xml
+  mapper-locations: classpath:mapper/**/*.xml
   global-config:
     db-config:
       id-type: auto #主键自增
-
 server:
   port: 7004
+logging:
+  level:
+    com.zy.webmail.ware: debug

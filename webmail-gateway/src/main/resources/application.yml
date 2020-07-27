@@ -1,0 +1,68 @@
+spring:
+  cloud:
+    nacos:
+        discovery:
+          server-addr: 127.0.0.1:8848
+    gateway:
+      routes:               #配置网关路由
+#        - id: test-baidu
+#          uri: http://www.baidu.com
+#          predicates:                #配置网关断路
+#            - Query=url,baidu        #url=baidu时转发到百度网页,如下同理
+#
+#        - id: test-qq
+#          uri: http://www.qq.com
+#          predicates:
+#            - Query=url,qq
+
+        - id: product_route                   #路由商品服务
+          uri: lb://product-provider
+          predicates:
+            - Path=/api/product/**
+          filters:   #路径重写
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+        - id: member_route        #路由会员服务
+          uri: lb://member-provider
+          predicates:
+            - Path=/api/member/**
+          filters:   #路径重写
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+        - id: coupon_route             #路由优惠卷服务
+          uri: lb://coupon-provider
+          predicates:
+            - Path=/api/coupon/**
+          filters:   #路径重写
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+        - id: ware_route             #路由存储服务
+          uri: lb://ware-provider
+          predicates:
+            - Path=/api/ware/**
+          filters:   #路径重写
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+        - id: third-service-router             #路由第三方服务
+          uri: lb://webmail-third-service
+          predicates:
+            - Path=/api/thirdservice/**
+          filters:   #路径重写
+            - RewritePath=/api/thirdservice/(?<segment>.*),/$\{segment}
+
+        - id: admin-router      #配置网关路由id        #路由人人fast服务
+          uri: lb://renren-fast   #配置负责的服务,负载均衡
+          predicates:
+            - Path=/api/**     #所有带有api的   前端项目所有请求都带有api，所以都经过此路由
+          filters:   #路径重写
+            - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
+
+        - id: webmail-host-router      #配置网关路由id        #路由nginx网关
+          uri: lb://product-provider   #配置负责的服务,负载均衡
+          predicates:
+            - Host=**.webmail.com,webmail.com     #任意的域名带有webmail.com 走这里
+
+  application:
+    name: webmail-gateway
+server:
+  port: 7070

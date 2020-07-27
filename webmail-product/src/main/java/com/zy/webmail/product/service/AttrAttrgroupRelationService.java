@@ -3,6 +3,7 @@ package com.zy.webmail.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zy.common.utils.PageUtils;
 import com.zy.webmail.product.entity.AttrAttrgroupRelationEntity;
+import com.zy.webmail.product.vo.AttrGroupRelationVo;
 
 import java.util.Map;
 
@@ -16,5 +17,8 @@ import java.util.Map;
 public interface AttrAttrgroupRelationService extends IService<AttrAttrgroupRelationEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+
+    void saveBatch(AttrGroupRelationVo[] relationVo);
 }
 

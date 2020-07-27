@@ -3,10 +3,17 @@ package com.zy.webmail.product;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zy.webmail.product.entity.BrandEntity;
 import com.zy.webmail.product.service.BrandService;
+import com.zy.webmail.product.service.CategoryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 
 @SpringBootTest
@@ -15,6 +22,14 @@ class WebmailProductApplicationTests {
     @Autowired
     BrandService brandService;
 
+    @Autowired
+    CategoryService categoryService;
+
+    @Test
+    public void test(){
+        Long[] getcatelogpath = categoryService.getcatelogpath(166L);
+        System.out.println(Arrays.asList(getcatelogpath));
+    }
     @Test
     void contextLoads() {
         BrandEntity brandEntity=new BrandEntity();
@@ -32,4 +47,11 @@ class WebmailProductApplicationTests {
         });
     }
 
+    @Test
+    void test1(){
+        HashMap<Object, Object> map = new HashMap<>();
+        map.put("k","v");
+        Hashtable<Object, Object> hashtable = new Hashtable<>(map);
+        System.out.println(map.size()+","+hashtable.size());
+    }
 }

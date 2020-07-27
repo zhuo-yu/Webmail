@@ -3,6 +3,7 @@ package com.zy.webmail.ware.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zy.common.utils.PageUtils;
 import com.zy.webmail.ware.entity.PurchaseEntity;
+import com.zy.webmail.ware.vo.MergeVo;
 
 import java.util.Map;
 
@@ -16,5 +17,9 @@ import java.util.Map;
 public interface PurchaseService extends IService<PurchaseEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    PageUtils queryunreceive(Map<String, Object> params);
+
+    void mergePurchase(MergeVo mergeVo);
 }
 

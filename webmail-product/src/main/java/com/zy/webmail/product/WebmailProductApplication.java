@@ -5,6 +5,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 
 /*
@@ -22,6 +23,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @SpringBootApplication
 @EnableDiscoveryClient
 @MapperScan("com.zy.webmail.product.dao")
+@EnableFeignClients(basePackages = "com.zy.webmail.product.feign")  //开启远程调用功能
 public class WebmailProductApplication {
 
     public static void main(String[] args) {

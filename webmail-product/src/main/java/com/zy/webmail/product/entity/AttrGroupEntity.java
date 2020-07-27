@@ -1,5 +1,6 @@
 package com.zy.webmail.product.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
@@ -45,4 +46,9 @@ public class AttrGroupEntity implements Serializable {
 	 */
 	private Long catelogId;
 
+	/*
+	* /父/子/孙 完整路径
+	* */
+	@TableField(exist = false)
+	private Long[] catelogPath;
 }

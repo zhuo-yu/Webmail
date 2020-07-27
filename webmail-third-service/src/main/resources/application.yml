@@ -1,0 +1,16 @@
+spring:
+  cloud:
+    alicloud:
+      access-key: LTAI4GEKp6NkYmVTwDVYZbHL   #配置阿里云oss 子账户密码
+      secret-key: 4Re1sr9fOdbPmvbqxYxvDNG9iOWytB
+      oss:
+        endpoint: oss-cn-shenzhen.aliyuncs.com  #配置endpoint
+        bucket: webmail-zy
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+
+  application:
+    name: webmail-third-service
+server:
+  port: 9090

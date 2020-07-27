@@ -1,8 +1,8 @@
 package com.zy.webmail.member;
 
 
-import com.zy.webmail.menber.entity.MemberEntity;
-import com.zy.webmail.menber.service.MemberService;
+import com.zy.webmail.member.entity.MemberEntity;
+import com.zy.webmail.member.service.MemberService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

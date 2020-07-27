@@ -1,14 +1,16 @@
 package com.zy.webmail.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import com.zy.webmail.product.entity.AttrAttrgroupRelationEntity;
+import com.zy.webmail.product.entity.ProductAttrValueEntity;
+import com.zy.webmail.product.service.ProductAttrValueService;
+import com.zy.webmail.product.vo.AttrRespVo;
+import com.zy.webmail.product.vo.AttrVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.zy.webmail.product.entity.AttrEntity;
 import com.zy.webmail.product.service.AttrService;
@@ -30,6 +32,32 @@ public class AttrController {
     @Autowired
     private AttrService attrService;
 
+    @Autowired
+    private ProductAttrValueService productAttrValueService;
+    //product/attr/base/list/{catelogId}
+    ///product/attr/sale/list/{catelogId}
+    /**
+     * 列表
+     */
+    @GetMapping("/{attrtype}/list/{catelogId}")
+    public R baseAttrList(@RequestParam Map<String, Object> params,
+                          @PathVariable("catelogId") Long catelogId,
+                          @PathVariable("attrtype")String attrtype){
+        PageUtils page = attrService.querybaseAttrPage(params,catelogId,attrtype);
+        return R.ok().put("page", page);
+    }
+
+    ///product/attr/base/listforspu/{spuId}
+    /*
+    *      获取spu规格
+    * */
+    @GetMapping("/base/listforspu/{spuId}")
+    public R listforspu(@PathVariable("spuId") Long spuId){
+//        PageUtils page = attrService.querybaseAttrPage();
+        List<ProductAttrValueEntity>  entities=attrService.listforspu(spuId);
+        return R.ok().put("data", entities);
+    }
+
     /**
      * 列表
      */
@@ -48,9 +76,10 @@ public class AttrController {
     @RequestMapping("/info/{attrId}")
     //@RequiresPermissions("product:attr:info")
     public R info(@PathVariable("attrId") Long attrId){
-		AttrEntity attr = attrService.getById(attrId);
+//		AttrEntity attr = attrService.getById(attrId);  //返回普通attr属性，不包括catelogPath和attrGroupId
 
-        return R.ok().put("attr", attr);
+		AttrRespVo attrRespVo=attrService.getDetail(attrId);  //添加全路径属性以及分组id属性，包括catelogPath和attrGroupId
+        return R.ok().put("attr", attrRespVo);
     }
 
     /**
@@ -58,9 +87,8 @@ public class AttrController {
      */
     @RequestMapping("/save")
     //@RequiresPermissions("product:attr:save")
-    public R save(@RequestBody AttrEntity attr){
-		attrService.save(attr);
-
+    public R save(@RequestBody AttrVo attr){
+		attrService.saveAttr(attr);
         return R.ok();
     }
 
@@ -69,9 +97,20 @@ public class AttrController {
      */
     @RequestMapping("/update")
     //@RequiresPermissions("product:attr:update")
-    public R update(@RequestBody AttrEntity attr){
-		attrService.updateById(attr);
+    public R update(@RequestBody AttrRespVo attr){
+//		attrService.updateById(attr);
+        attrService.updateAttr(attr);
+        return R.ok();
+    }
 
+    //product/attr/update/{spuId}
+    /*
+    *  修改商品规格
+    * */
+    @PostMapping("/update/{spuId}")
+    //@RequiresPermissions("product:attr:update")
+    public R updateSpu(@PathVariable("spuId") Long spuId,@RequestBody List<ProductAttrValueEntity> productAttrValueEntities){
+        productAttrValueService.updateSpu(spuId,productAttrValueEntities);
         return R.ok();
     }
 

@@ -3,6 +3,7 @@ package com.zy.webmail.coupon.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.zy.common.to.SkuReductionTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +31,15 @@ public class SkuFullReductionController {
     @Autowired
     private SkuFullReductionService skuFullReductionService;
 
+    /*
+    *  保存满减，优惠多个信息
+    * */
+    @RequestMapping("/saveinfo")
+    //@RequiresPermissions("coupon:skufullreduction:list")
+    public R saveInfo(@RequestBody SkuReductionTo skuReductionTo){
+        skuFullReductionService.saveSkuReduction(skuReductionTo);
+        return R.ok();
+    }
     /**
      * 列表
      */

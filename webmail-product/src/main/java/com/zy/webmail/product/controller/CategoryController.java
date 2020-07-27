@@ -1,6 +1,8 @@
 package com.zy.webmail.product.controller;
 
+import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,20 +27,18 @@ import com.zy.common.utils.R;
  * @date 2020-04-18 12:58:00
  */
 @RestController
-@RequestMapping("product/category")
+@RequestMapping("/product/category")
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
     /**
-     * 列表
+     * 查出所有分类以及子分类、以树形结构组装起来
      */
-    @RequestMapping("/list")
-    //@RequiresPermissions("product:category:list")
+    @RequestMapping(value = "/list/tree")
     public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = categoryService.queryPage(params);
-
-        return R.ok().put("page", page);
+        List<CategoryEntity> categoryEntities = categoryService.listWithTree(); //查出所有的分类
+        return R.ok().put("data", categoryEntities);
     }
 
 
@@ -49,8 +49,7 @@ public class CategoryController {
     //@RequiresPermissions("product:category:info")
     public R info(@PathVariable("catId") Long catId){
 		CategoryEntity category = categoryService.getById(catId);
-
-        return R.ok().put("category", category);
+        return R.ok().put("data", category);
     }
 
     /**
@@ -60,7 +59,6 @@ public class CategoryController {
     //@RequiresPermissions("product:category:save")
     public R save(@RequestBody CategoryEntity category){
 		categoryService.save(category);
-
         return R.ok();
     }
 
@@ -70,19 +68,21 @@ public class CategoryController {
     @RequestMapping("/update")
     //@RequiresPermissions("product:category:update")
     public R update(@RequestBody CategoryEntity category){
-		categoryService.updateById(category);
+		categoryService.updateDetail(category);  //需要同步修改其他关联表
 
         return R.ok();
     }
 
     /**
-     * 删除
+     * 删除,使用逻辑删除
      */
     @RequestMapping("/delete")
     //@RequiresPermissions("product:category:delete")
     public R delete(@RequestBody Long[] catIds){
-		categoryService.removeByIds(Arrays.asList(catIds));
-
+        //检查当前删除的菜单是否被别的地方引用
+//		categoryService.removeByIds(Arrays.asList(catIds));\
+        System.out.println(catIds);
+        categoryService.removeMenusByIds(Arrays.asList(catIds));
         return R.ok();
     }
 

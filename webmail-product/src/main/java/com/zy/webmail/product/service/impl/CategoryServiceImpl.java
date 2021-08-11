@@ -53,7 +53,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         }).sorted((menu1,menu2)->{
             return (menu1.getSort()==null?0:menu1.getSort()) - (menu2.getSort()==null?0:menu2.getSort()) ;
         }).collect(Collectors.toList());
-        System.out.println(LeveloneMenus);
+        System.out.println("查询到的数据:"+LeveloneMenus);
         return LeveloneMenus;
     }
 

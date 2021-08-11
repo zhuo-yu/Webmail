@@ -11,10 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
+import java.util.*;
 
 @SpringBootTest
 class WebmailProductApplicationTests {
@@ -54,4 +51,26 @@ class WebmailProductApplicationTests {
         Hashtable<Object, Object> hashtable = new Hashtable<>(map);
         System.out.println(map.size()+","+hashtable.size());
     }
+
+    @Test
+    public int reverse(int x) {
+            String x2=Integer.toString(x);
+            try{
+                if(x<0){
+                    String substring = x2.substring(1);
+                    return Integer.parseInt((new StringBuilder(substring).reverse().toString()))*-1;
+                }else{
+                    return Integer.parseInt(new StringBuilder(x2).reverse().toString());
+                }
+            }catch(Exception e){
+                return 0;
+            }
+
+    }
+    @Test
+    void test2(){
+        System.out.println(reverse(-123));
+    }
+
+
 }

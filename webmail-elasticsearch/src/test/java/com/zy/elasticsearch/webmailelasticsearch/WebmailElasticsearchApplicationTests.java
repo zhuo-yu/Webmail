@@ -70,7 +70,7 @@ class WebmailElasticsearchApplicationTests {
 
     @Test
     void index() throws IOException {
-        IndexRequest indexRequest = new IndexRequest("users");
+        IndexRequest indexRequest = new IndexRequest("users22");
         indexRequest.id("1");
 //        indexRequest.source("username","zhangsan","age","12","gender","男");   //一种方式
         testData testData = new testData();

@@ -16,7 +16,7 @@
         <result property="productCount" column="product_count"/>
     </resultMap>
     <select id="getLevelOne" resultType="com.zy.webmail.product.entity.CategoryEntity">
-        select *from pms_category where cat_level =1;
+        select *from pms_category where parent_cid =0;
     </select>
 
 

@@ -28,6 +28,7 @@ public class BrandServiceImpl extends ServiceImpl<BrandDao, BrandEntity> impleme
 //    @Resource
 //    CategoryBrandRelationDao categoryBrandRelationDao;
 
+
     @Autowired
     CategoryBrandRelationService categoryBrandRelationService;
 

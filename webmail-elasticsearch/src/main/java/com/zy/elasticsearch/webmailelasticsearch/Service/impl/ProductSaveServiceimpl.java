@@ -43,7 +43,7 @@ public class ProductSaveServiceimpl implements ProductSaveService {
             //执行批量操作
         BulkResponse bulk = client.bulk(bulkRequest, elasticsearchconfig.COMMON_OPTIONS);
         boolean b = bulk.hasFailures();
-        if(b){
+        if(!b){
             List<String> collect = Arrays.stream(bulk.getItems()).map(item -> {
                 return item.getId();
             }).collect(Collectors.toList());

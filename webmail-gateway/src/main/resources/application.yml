@@ -18,7 +18,7 @@ spring:
         - id: product_route                   #路由商品服务
           uri: lb://product-provider
           predicates:
-            - Path=/api/product/**
+            - Path=/api/product/**,/product/category/hello
           filters:   #路径重写
             - RewritePath=/api/(?<segment>.*),/$\{segment}
 
@@ -60,7 +60,12 @@ spring:
         - id: webmail-host-router      #配置网关路由id        #路由nginx网关
           uri: lb://product-provider   #配置负责的服务,负载均衡
           predicates:
-            - Host=**.webmail.com,webmail.com     #任意的域名带有webmail.com 走这里
+            - Host=webmail.com     #任意的域名带有webmail.com 走这里
+
+        - id: webmail-elasticsearch-router      #配置网关路由id        #路由nginx网关
+          uri: lb://webmail-elasticsearch   #配置负责的服务,负载均衡
+          predicates:
+            - Host=search.webmail.com,search.gmall.com     #任意的域名带有search.webmail.com或search.gmall.com  走这里
 
   application:
     name: webmail-gateway

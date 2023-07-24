@@ -74,7 +74,7 @@ class WebmailElasticsearchApplicationTests {
         indexRequest.id("1");
 //        indexRequest.source("username","zhangsan","age","12","gender","男");   //一种方式
         testData testData = new testData();
-        testData.setUsername("zhangsan").setAge(12).setGender("男");
+        testData.setUsername("zhangsan").setAge(12).setGender("男2");
         String string = JSON.toJSONString(testData);
         indexRequest.source(string, XContentType.JSON);
         //执行操作

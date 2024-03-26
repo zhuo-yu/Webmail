@@ -5,6 +5,7 @@ import com.zy.common.utils.PageUtils;
 import com.zy.webmail.product.entity.AttrGroupEntity;
 import com.zy.webmail.product.vo.AttrGroupRelationVo;
 import com.zy.webmail.product.vo.AttrGroupWithAttrsVo;
+import com.zy.webmail.product.vo.SpuItemAttrGroupVo;
 
 import java.util.List;
 import java.util.Map;
@@ -23,5 +24,7 @@ public interface AttrGroupService extends IService<AttrGroupEntity> {
     PageUtils queryPage(Map<String, Object> params, Long categoryId);
 
     List<AttrGroupWithAttrsVo> getAttrGroupWithAttrsByCatelogId(Long catelogId);
+
+    List<SpuItemAttrGroupVo> getAttrGroupWithAttrsBySpuId(Long spuId);
 }
 

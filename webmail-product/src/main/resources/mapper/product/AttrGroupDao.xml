@@ -13,5 +13,25 @@
         <result property="catelogId" column="catelog_id"/>
     </resultMap>
 
+    <resultMap id="SpuItemAttrGroupVo" type="com.zy.webmail.product.vo.SpuItemAttrGroupVo">
+        <result property="groupName" column="attr_group_name"/>
+        <collection property="attrs" ofType="com.zy.webmail.product.vo.SpuBaseAttrVo">
+            <result property="attrName" column="attr_name"/>
+            <result property="attrValue" column="attr_value"/>
+        </collection>
+    </resultMap>
+
+    <select id="getAttrGroupWithAttrsBySpuId" resultMap="SpuItemAttrGroupVo">
+        select
+            a.attr_group_name,
+            d.attr_name,
+            d.attr_value
+        from pms_attr_group a
+        left join pms_attr_attrgroup_relation b on a.attr_group_id = b.attr_group_id
+        left join pms_attr c on c.attr_id = b.attr_id
+        left join pms_product_attr_value d on d.attr_id = c.attr_id
+        where d.spu_id  = #{spuId}
+    </select>
+
 
 </mapper>

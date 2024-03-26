@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: webmail-auth
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+  redis:
+    # 地址
+    host: 192.168.0.101
+    # 端口，默认为6379
+    port: 6379
+    # 数据库索引
+    database: 0
+    # 密码
+    password:
+  # spring-cache 使用redis作为缓存
+  cache:
+    type: redis
+    redis:
+      time-to-live: 360000
+      #如果没指定前缀,则使用缓存名字
+      use-key-prefix: true
+      #是否缓存空值
+      cache-null-values: true
+  session:
+    store-type: redis
+server:
+  port: 7013

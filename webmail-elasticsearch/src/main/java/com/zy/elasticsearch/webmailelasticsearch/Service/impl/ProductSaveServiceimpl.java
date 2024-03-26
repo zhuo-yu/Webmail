@@ -1,6 +1,7 @@
 package com.zy.elasticsearch.webmailelasticsearch.Service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zy.common.to.es.SkuEsModel;
 import com.zy.elasticsearch.webmailelasticsearch.Service.ProductSaveService;
 import com.zy.elasticsearch.webmailelasticsearch.config.elasticsearchconfig;

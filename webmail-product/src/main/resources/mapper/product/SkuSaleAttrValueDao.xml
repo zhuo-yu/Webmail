@@ -13,5 +13,23 @@
         <result property="attrSort" column="attr_sort"/>
     </resultMap>
 
+    <select id="getSaleAttrsBySpuId" resultType="com.zy.webmail.product.vo.SkuItemSaleAttrVo">
+            select
+                b.attr_id attrId,
+                b.attr_name attrName,
+                GROUP_CONCAT(b.attr_value) attrValues
+            from pms_sku_info a
+            left join pms_sku_sale_attr_value b on a.sku_id = b.sku_id
+            where a.spu_id = #{spuId}
+            GROUP BY attr_id,attr_name
+    </select>
+
+    <select id="getSaleAttrValueToStringList" resultType="java.lang.String">
+        select CONCAT(attr_name,':',attr_value) attrValue
+        from pms_sku_sale_attr_value
+        where
+        sku_id = #{skuId}
+    </select>
+
 
 </mapper>

@@ -30,7 +30,7 @@ public class elasticsearchconfig {
     public RestHighLevelClient esRestClient(){    //将RestHighLevelClient客户端注入spring中
         RestHighLevelClient client = new RestHighLevelClient(
                 RestClient.builder(
-                        new HttpHost("192.168.1.107", 9200, "http")));
+                        new HttpHost("192.168.0.101", 9200, "http")));
         return client;
     }
 }

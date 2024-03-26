@@ -1,6 +1,7 @@
 package com.zy.webmail.webmailthirdservice;
 
 import com.aliyun.oss.OSSClient;
+import com.zy.webmail.webmailthirdservice.utils.SmsUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +15,9 @@ class WebmailThirdServiceApplicationTests {
 
     @Autowired
     OSSClient ossClient;
+
+    @Autowired
+    SmsUtils smsUtils;
     @Test
     public void testUpload() throws FileNotFoundException {
 //        // Endpoint以杭州为例，其它Region请按实际情况填写。
@@ -35,6 +39,7 @@ class WebmailThirdServiceApplicationTests {
     }
     @Test
     void contextLoads() {
+        smsUtils.sendSms("8888","13268027753","","");
     }
 
 }

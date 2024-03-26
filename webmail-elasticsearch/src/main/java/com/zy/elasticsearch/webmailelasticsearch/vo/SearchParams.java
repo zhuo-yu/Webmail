@@ -35,7 +35,7 @@ public class SearchParams {
      *  brandId = 1
      *  attrs=1_5寸:6寸
      */
-    private Integer hasStock = 1;//是否有货 0无库存,1有库存
+    private Integer hasStock = 0;//是否有货 0无库存,1有库存
     private String skuPrice;//价格区间
     private List<Long> brandId;// 品牌筛选,可多选
     private List<String> attrs;//属性刷选,可多选

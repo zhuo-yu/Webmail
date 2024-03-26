@@ -6,7 +6,10 @@ import com.zy.webmail.product.entity.AttrEntity;
 import com.zy.webmail.product.service.AttrService;
 import com.zy.webmail.product.vo.AttrGroupRelationVo;
 import com.zy.webmail.product.vo.AttrGroupWithAttrsVo;
+import com.zy.webmail.product.vo.SpuItemAttrGroupVo;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -88,6 +91,17 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
         //2、查询属性分组的全部属性
 
         return collect;
+    }
+
+    /**
+     * 获取spu的规格参数信息
+     * @param spuId
+     * @return
+     */
+    @Override
+    public List<SpuItemAttrGroupVo> getAttrGroupWithAttrsBySpuId(Long spuId) {
+        //1、查出spu对应的分组名及下的分类信息
+        return attrGroupDao.getAttrGroupWithAttrsBySpuId(spuId);
     }
 
 

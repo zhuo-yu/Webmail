@@ -93,4 +93,9 @@ public class MemberEntity implements Serializable {
 	 */
 	private Date createTime;
 
+    /**
+     * 用户头像
+     */
+	private String userImg;
+
 }

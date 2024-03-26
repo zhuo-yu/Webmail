@@ -3,13 +3,12 @@ package com.zy.webmail.member.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
 import com.zy.webmail.member.feign.couponfeignservice;
+import com.zy.webmail.member.vo.MemberLoginVo;
+import com.zy.webmail.member.vo.MemberRegisterVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.zy.webmail.member.entity.MemberEntity;
 import com.zy.webmail.member.service.MemberService;
@@ -26,7 +25,7 @@ import com.zy.common.utils.R;
  * @date 2020-04-19 16:10:37
  */
 @RestController
-@RequestMapping("member/member")
+@RequestMapping("/member/member")
 public class MemberController {
     @Autowired
     private MemberService memberService;
@@ -51,6 +50,32 @@ public class MemberController {
         PageUtils page = memberService.queryPage(params);
 
         return R.ok().put("page", page);
+    }
+
+    /**
+     * 注册
+     */
+    @PostMapping("/register")
+    public R register(@RequestBody MemberRegisterVo memberRegisterVo){
+        return memberService.register(memberRegisterVo);
+    }
+
+    /**
+     * 登录
+     * @return
+     */
+    @PostMapping("/login")
+    public MemberEntity login(@RequestBody MemberLoginVo memberLoginVo){
+        return memberService.login(memberLoginVo);
+    }
+
+    /**
+     * 社交登录
+     * @return
+     */
+    @PostMapping("/oauthLogin")
+    public MemberEntity oauthLogin(@RequestBody JSONObject oauthUser){
+        return memberService.oauthLogin(oauthUser);
     }
 
 

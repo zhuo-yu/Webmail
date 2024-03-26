@@ -1,10 +1,11 @@
 package com.zy.elasticsearch.webmailelasticsearch.Service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.zy.common.to.es.SkuEsModel;
 import com.zy.elasticsearch.webmailelasticsearch.Service.MailSearchService;
 import com.zy.elasticsearch.webmailelasticsearch.config.elasticsearchconfig;
 import com.zy.elasticsearch.webmailelasticsearch.constant.Esconstant;
-import com.zy.elasticsearch.webmailelasticsearch.vo.SearchParams;
-import com.zy.elasticsearch.webmailelasticsearch.vo.SearchResult;
+import com.zy.elasticsearch.webmailelasticsearch.vo.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.search.SearchRequest;
@@ -12,8 +13,16 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.lucene.search.function.FunctionScoreQuery;
 import org.elasticsearch.index.query.*;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.nested.NestedAggregationBuilder;
+import org.elasticsearch.search.aggregations.bucket.nested.ParsedNested;
+import org.elasticsearch.search.aggregations.bucket.terms.ParsedLongTerms;
+import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
@@ -22,6 +31,9 @@ import org.springframework.stereotype.Service;
 import org.elasticsearch.search.sort.SortOrder;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MailSearchServiceimpl implements MailSearchService {
@@ -41,21 +53,108 @@ public class MailSearchServiceimpl implements MailSearchService {
             SearchResponse response = restHighLevelClient.search(searchRequest, elasticsearchconfig.COMMON_OPTIONS);
 
             //分析相应数据封装成我们需要的格式
-            searchResult = buildSearchResult(response);
+            searchResult = buildSearchResult(response,params);
             //TODO
         }catch (Exception e){
             e.printStackTrace();
         }
-        return null;
+        return searchResult;
     }
 
     /**
      * 分析相应数据封装成我们需要的格式
      * @return
      */
-    private SearchResult buildSearchResult(SearchResponse response) {
+    private SearchResult buildSearchResult(SearchResponse response,SearchParams params) {
+        SearchHits hits = response.getHits();
 
-        return null;
+
+        SearchResult result = new SearchResult();
+        //查询到的所有商品信息
+        List<SkuEsModel> productList = new ArrayList<>();
+        SearchHit[] searchHits = hits.getHits();
+        for (SearchHit hit : searchHits) {
+            SkuEsModel skuEsModel = JSON.parseObject(hit.getSourceAsString(), SkuEsModel.class);
+            if (StringUtils.isNotBlank(params.getKeyword())){
+                String skuTitle = hit.getHighlightFields().get("skuTitle").getFragments()[0].string();
+                skuEsModel.setSkuTitle(skuTitle);
+            }
+            productList.add(skuEsModel);
+        }
+        result.setProducts(productList);
+
+        Aggregations aggregations = response.getAggregations();
+        //当前查询到的结果,所有涉及的品牌
+        List<BrandVo> brandList = new ArrayList<>();
+        ParsedLongTerms brandAgg = aggregations.get("brandAgg");
+        for (Terms.Bucket bucket : brandAgg.getBuckets()) {
+            BrandVo brandVo = new BrandVo();
+            //brandId
+            brandVo.setBrandId(Long.parseLong(bucket.getKeyAsString()));
+            //brandImg
+            ParsedStringTerms brandImg = bucket.getAggregations().get("brandImg");
+            brandVo.setBrandImg(brandImg.getBuckets().get(0).getKeyAsString());
+            //brandName
+            ParsedStringTerms brandName = bucket.getAggregations().get("brandName");
+            brandVo.setBrandName(brandName.getBuckets().get(0).getKeyAsString());
+            brandList.add(brandVo);
+        }
+        result.setBrands(brandList);
+
+        //当前查询到的结果,所有涉及的分类
+        List<CatalogVo> catalogList = new ArrayList<>();
+        ParsedLongTerms catalogAgg = aggregations.get("catalogAgg");
+        for (Terms.Bucket bucket : catalogAgg.getBuckets()) {
+            CatalogVo catalogVo = new CatalogVo();
+            String catalogId = bucket.getKeyAsString();
+            //catalogId
+            catalogVo.setCatalogId(Long.parseLong(catalogId));
+            //catalogName
+            ParsedStringTerms catalogName = bucket.getAggregations().get("catalogName");
+            catalogVo.setCatalogName(catalogName.getBuckets().get(0).getKeyAsString());
+            catalogList.add(catalogVo);
+        }
+        result.setCatalogs(catalogList);
+
+        //当前查询到的结果,所有涉及的属性
+        List<AttrVo> attrList = new ArrayList<>();
+        ParsedNested attrsAgg = aggregations.get("attrsAgg");
+        ParsedLongTerms attrIdAgg = attrsAgg.getAggregations().get("attrIdAgg");
+        for (Terms.Bucket bucket : attrIdAgg.getBuckets()) {
+            AttrVo attrVo = new AttrVo();
+            //attrId
+            attrVo.setAttrId(bucket.getKeyAsNumber().longValue());
+            //attrName
+            ParsedStringTerms attrsName = bucket.getAggregations().get("attrsName");
+            attrVo.setAttrName(attrsName.getBuckets().get(0).getKeyAsString());
+            //attr
+            ParsedStringTerms attrsValue = bucket.getAggregations().get("attrsValue");
+            List<String> attrValue = attrsValue.getBuckets().stream().map(item -> {
+                return ((Terms.Bucket) item).getKeyAsString();
+            }).collect(Collectors.toList());
+            attrVo.setAttrValue(attrValue);
+            attrList.add(attrVo);
+        }
+        result.setAttrs(attrList);
+
+        /* 分页信息 */
+        //当前页码
+        result.setPageNum(params.getPageNum());
+        //总记录数
+        long total = hits.getTotalHits().value;
+        result.setTotal(total);
+
+        //总页码数  总记录数%分页数
+        long totalPage = total%Esconstant.PRODUCT_PAGENUMBER == 0?total/Esconstant.PRODUCT_PAGENUMBER:(total/Esconstant.PRODUCT_PAGENUMBER+1);
+        result.setTotalPages((int) totalPage);
+        List<Integer> totalPagesList = new ArrayList<>();
+        if (result.getTotalPages() != null && result.getTotalPages() !=0){
+            for (int i = 0; i < result.getTotalPages(); i++) {
+                totalPagesList.add(i);
+            }
+        }
+        result.setTotalPagesList(totalPagesList);
+        return result;
     }
 
     /**
@@ -124,7 +223,7 @@ public class MailSearchServiceimpl implements MailSearchService {
         //聚合分析
         //品牌聚合
         TermsAggregationBuilder brandAgg = AggregationBuilders.terms("brandAgg");
-        brandAgg.field("brandName").size(20);
+        brandAgg.field("brandId").size(20);
         //品牌聚合 - 子聚合 品牌名称
         TermsAggregationBuilder brandName = AggregationBuilders.terms("brandName");
         brandName.field("brandName").size(10);

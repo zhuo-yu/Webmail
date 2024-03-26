@@ -60,13 +60,27 @@ spring:
         - id: webmail-host-router      #配置网关路由id        #路由nginx网关
           uri: lb://product-provider   #配置负责的服务,负载均衡
           predicates:
-            - Host=webmail.com     #任意的域名带有webmail.com 走这里
+            - Host=webmail.com,item.webmail.com     #任意的域名带有webmail.com,item.webmail.com 走这里
 
         - id: webmail-elasticsearch-router      #配置网关路由id        #路由nginx网关
           uri: lb://webmail-elasticsearch   #配置负责的服务,负载均衡
           predicates:
             - Host=search.webmail.com,search.gmall.com     #任意的域名带有search.webmail.com或search.gmall.com  走这里
 
+        - id: webmail-auth-router      #配置网关路由id #认证服务
+          uri: lb://webmail-auth   #配置负责的服务,负载均衡
+          predicates:
+            - Host=auth.webmail.com     #auth.webmail.com  走这里
+
+        - id: webmail-cart-router      #配置网关路由id #购物车服务
+          uri: lb://webmail-cart  #配置负责的服务,负载均衡
+          predicates:
+            - Host=cart.webmail.com     #auth.webmail.com  走这里
+
+        - id: webmail-order-router      #配置网关路由id #订单服务
+          uri: lb://order-provider #配置负责的服务,负载均衡
+          predicates:
+            - Host=order.webmail.com     #order.webmail.com  走这里
   application:
     name: webmail-gateway
 server:

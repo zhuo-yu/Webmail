@@ -3,12 +3,49 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: 123456
-    url: jdbc:mysql://192.168.1.104:3306/webmail-oms
+    url: jdbc:mysql://192.168.0.101:3306/webmail-oms
   cloud:
     nacos:
       server-addr: 127.0.0.1:8848
   application:
     name: order-provider
+  rabbitmq:
+    host: 192.168.0.101
+    username: guest
+    password: guest
+    port: 5672
+    virtual-host: /
+    #开启消息确认机制
+    publisher-confirm-type: correlated
+    #开启消息回调机制,当broker到Queue失败时回调
+    publisher-returns: true
+    #只要消息抵达队列,优先回调returnConfirm
+    template:
+      mandatory: true
+    #ack确认机制改为手动
+    listener:
+      simple:
+        acknowledge-mode: manual
+  redis:
+    # 地址
+    host: 192.168.0.101
+    # 端口，默认为6379
+    port: 6379
+    # 数据库索引
+    database: 0
+    # 密码
+    password:
+  # spring-cache 使用redis作为缓存
+  cache:
+    type: redis
+    redis:
+      time-to-live: 360000
+      #如果没指定前缀,则使用缓存名字
+      use-key-prefix: true
+      #是否缓存空值
+      cache-null-values: true
+  session:
+    store-type: redis
 mybatis-plus:
   mapper-locations: classpath:mapper/**/*.xml
   global-config:

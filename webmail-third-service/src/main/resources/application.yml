@@ -6,9 +6,11 @@ spring:
       oss:
         endpoint: oss-cn-shenzhen.aliyuncs.com  #配置endpoint
         bucket: webmail-zy
+      appCode: a4ef0982b587422cb29e48ddf2b1037a
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+
 
   application:
     name: webmail-third-service

@@ -1,5 +1,6 @@
 package com.zy.webmail.product.service.impl;
 
+import com.zy.webmail.product.vo.SkuItemSaleAttrVo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,6 +33,28 @@ public class SkuSaleAttrValueServiceImpl extends ServiceImpl<SkuSaleAttrValueDao
     @Override
     public void saveSkuAttr(List<SkuSaleAttrValueEntity> skuAttrs) {
         this.saveBatch(skuAttrs);
+    }
+
+    /**
+     * 获取spu的销售属性组合
+     * @param spuId
+     * @return
+     */
+    @Override
+    public List<SkuItemSaleAttrVo> getSaleAttrsBySpuId(Long spuId) {
+        SkuSaleAttrValueDao dao = this.baseMapper;
+        return dao.getSaleAttrsBySpuId(spuId);
+    }
+
+    /**
+     * 获取整合销售属性
+     * @param skuId
+     * @return
+     */
+    @Override
+    public List<String> getSaleAttrValueToStringList(Long skuId) {
+        SkuSaleAttrValueDao dao = this.baseMapper;
+        return dao.getSaleAttrValueToStringList(skuId);
     }
 
 }
